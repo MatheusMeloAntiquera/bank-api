@@ -2,7 +2,7 @@
 
 namespace App\Domain\User;
 
-interface UserService
+interface UserServiceInterface
 {
     public function createNewUser(DtoUserCreate $dtoUser): User;
     public function updateUser(DtoUserUpdate $dtoUser): User;

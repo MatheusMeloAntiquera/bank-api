@@ -12,6 +12,9 @@ class User
     public string $cpf;
     public bool $active;
 
+    public ?string $createdAt;
+    public ?string $updatedAt;
+
     public function __construct(
         string|int|null $id,
         string $name,
@@ -19,7 +22,9 @@ class User
         string $password,
         float $balance,
         string $cpf,
-        bool $active
+        bool $active,
+        ?string $createdAt = null,
+        ?string $updatedAt = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -28,6 +33,8 @@ class User
         $this->balance = $balance;
         $this->cpf = $cpf;
         $this->active = $active;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
     }
 
 

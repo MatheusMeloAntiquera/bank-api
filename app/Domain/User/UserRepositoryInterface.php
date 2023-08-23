@@ -4,7 +4,7 @@ namespace App\Domain\User;
 
 use App\Domain\User\User;
 
-interface UserRepository
+interface UserRepositoryInterface
 {
     public function createNewUser(User $user): User;
     public function updateUser(User $user): User;
