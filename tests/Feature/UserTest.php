@@ -6,9 +6,9 @@ use Tests\TestCase;
 use DomainException;
 use Tests\Traits\UserTestTrait;
 use Illuminate\Support\Facades\App;
+use App\Exceptions\NotFoundException;
 use App\Domain\User\UserServiceInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserTest extends TestCase
 {
@@ -61,7 +61,7 @@ class UserTest extends TestCase
 
         $newName = $this->fakerBr->name();
         $newEmail = $this->fakerBr->email();
-        $newPassword= $this->fakerBr->email();
+        $newPassword = $this->fakerBr->email();
         $newBalance = 250.50;
 
         $response = $this->putJson("/api/user/{$user->id}", [
@@ -133,8 +133,48 @@ class UserTest extends TestCase
         $response = $this->deleteJson("/api/user/{$user->id}");
 
         $response->assertNoContent();
-        $this->expectException(DomainException::class);
+        $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage("User not found");
         $this->userService->findUser($user->id);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldNotFoundAUser(): void
+    {
+        $response = $this->getJson("/api/user/10");
+
+        $response->assertStatus(404);
+        $this->assertSame("User not found", $response["message"]);
+
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldNotAllowTwoUserWithSameEmail(): void
+    {
+        $user = $this->returnAUserInsertable($this->fakerBr);
+
+        $this->postJson("/api/user/", [
+            "name" => $user->name,
+            "email" => $user->email,
+            "password" => $user->password,
+            "cpf" => $user->cpf
+        ]);
+
+        $response = $this->postJson("/api/user/", [
+            "name" => $user->name,
+            "email" => $user->email,
+            "password" => $user->password,
+            "cpf" => $user->cpf
+        ]);
+
+        $response->assertStatus(400);
+        $this->assertSame("The e-mail is already in use", $response["message"]);
+
     }
 }

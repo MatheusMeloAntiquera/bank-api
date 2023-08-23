@@ -69,5 +69,25 @@ class UserRepositoryQueryBuilder implements UserRepositoryInterface
         );
     }
 
+    public function findUserByEmail(string $email): User|null
+    {
+        $result = DB::table($this->table)->where('email', $email)->first();
+
+        if (empty($result)) {
+            return null;
+        }
+
+        return new User(
+            $result->id,
+            $result->name,
+            $result->email,
+            $result->password,
+            $result->balance,
+            $result->cpf,
+            $result->active,
+            $result->created_at,
+            $result->updated_at
+        );
+    }
 
 }
