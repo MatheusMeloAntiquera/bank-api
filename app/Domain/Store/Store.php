@@ -37,5 +37,18 @@ class Store
         $this->updatedAt = $updatedAt;
     }
 
-
+    public static function newStoreByArray(array $attributes)
+    {
+        return new self(
+            id: $attributes['id'],
+            name: $attributes['name'],
+            email: $attributes['email'],
+            password: $attributes['password'],
+            balance: $attributes['balance'],
+            cnpj: $attributes['cnpj'],
+            active: $attributes['active'],
+            createdAt: $attributes['created_at'],
+            updatedAt: $attributes['updated_at'],
+        );
+    }
 }
