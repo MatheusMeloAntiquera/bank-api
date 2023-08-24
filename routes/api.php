@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PurchaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -33,4 +34,8 @@ Route::prefix('store')->group(function () {
 
 Route::prefix('transfer')->group(function () {
     Route::post('/', [TransferController::class, 'executeTransfer']);
+});
+
+Route::prefix('purchase')->group(function () {
+    Route::post('/', [PurchaseController::class, 'executePurchase']);
 });

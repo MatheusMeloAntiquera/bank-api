@@ -4,7 +4,7 @@ namespace App\Infra\Services;
 
 use App\Domain\Store\Store;
 use App\Domain\Store\StoreRepositoryInterface;
-use App\Domain\Transaction\DtoTransactionCreate;
+use App\Domain\Transaction\DtoTransactionExecute;
 use App\Domain\Transaction\TransactionRepositoryInterface;
 use App\Domain\Transaction\TransactionServiceInterface;
 use App\Domain\User\User;
@@ -40,7 +40,7 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
     abstract protected function startTransaction(): void;
     abstract protected function rollbackTransaction(): void;
 
-    public function execute(DtoTransactionCreate $dtoCreate)
+    public function execute(DtoTransactionExecute $dtoCreate)
     {
         $this->setSender($dtoCreate->senderId);
         $this->checkIfSenderHasSufficientBalance($dtoCreate->value);

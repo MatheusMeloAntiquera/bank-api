@@ -2,7 +2,7 @@
 
 namespace App\Domain\Transaction;
 
-abstract class DtoTransactionCreate
+abstract class DtoTransactionExecute
 {
     public int|string $senderId;
     public int|string $recipientId;

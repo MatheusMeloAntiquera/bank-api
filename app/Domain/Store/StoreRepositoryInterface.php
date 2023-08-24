@@ -11,4 +11,5 @@ interface StoreRepositoryInterface
     public function deleteStore(Store $store): void;
     public function findStore(int $id): Store|null;
     public function findStoreByEmail(string $email): Store|null;
+    public function updateBalance(Store $store, float $newValue): void;
 }

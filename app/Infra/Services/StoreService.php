@@ -67,7 +67,6 @@ final class StoreService implements StoreServiceInterface
 
     public function checkIfEmailIsAlreadyInUse(string $email, Store $store = null): void
     {
-        dump($this->storeRepository->findStoreByEmail($email));
         if ($this->storeRepository->findStoreByEmail($email) != null) {
 
             if (!empty($store) && $store->email == $email) {
