@@ -58,12 +58,11 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
 
             $this->updateBalances($dtoCreate->value);
 
-
             $this->checkAuthorizationOnExternalService();
 
         } catch (Exception $e) {
             $this->rollbackTransaction();
-            throw new TransactionException($e->getMessage());
+            throw $e;
         }
 
         //TODO: Send message to recipient user/store
@@ -76,7 +75,7 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
     {
         if ($this->authorizationServiceRepository->isAuthorized() === false) {
             throw new TransactionNotAuthorizedException(
-                "The external service not authorized this transaction"
+                "The external service did not authorized this transaction"
             );
         }
     }
