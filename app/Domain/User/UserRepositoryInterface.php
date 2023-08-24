@@ -11,4 +11,5 @@ interface UserRepositoryInterface
     public function deleteUser(User $user): void;
     public function findUser(int $id): User|null;
     public function findUserByEmail(string $email): User|null;
+    public function updateBalance(User $user, float $newValue): void;
 }

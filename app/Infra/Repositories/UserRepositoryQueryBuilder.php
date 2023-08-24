@@ -90,4 +90,11 @@ class UserRepositoryQueryBuilder implements UserRepositoryInterface
         );
     }
 
+    public function updateBalance(User $user, float $newValue): void
+    {
+        DB::table($this->table)->where('id', $user->id)->update([
+            "balance" => $newValue
+        ]);
+    }
+
 }

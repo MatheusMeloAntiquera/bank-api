@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\StoreController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\TransferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +29,8 @@ Route::prefix('store')->group(function () {
     Route::put('/{id}', [StoreController::class, 'update']);
     Route::get('/{id}', [StoreController::class, 'findStoreById']);
     Route::delete('/{id}', [StoreController::class, 'delete']);
+});
+
+Route::prefix('transfer')->group(function () {
+    Route::post('/', [TransferController::class, 'executeTransfer']);
 });
