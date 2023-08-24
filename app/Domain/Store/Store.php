@@ -2,7 +2,9 @@
 
 namespace App\Domain\Store;
 
-class Store
+use App\Domain\Transaction\Recipient;
+
+class Store extends Recipient
 {
     public string|int|null $id;
     public string $name;
