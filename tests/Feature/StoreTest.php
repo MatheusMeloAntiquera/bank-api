@@ -176,4 +176,31 @@ class StoreTest extends TestCase
         $this->assertSame("The e-mail is already in use", $response["message"]);
 
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldNotAllowTwoUserWithSameCnpj(): void
+    {
+        $store = $this->returnAStoreInsertable($this->fakerBr);
+
+        $this->postJson("/api/store/", [
+            "name" => $store->name,
+            "email" => $store->email,
+            "password" => $store->password,
+            "cnpj" => $store->cnpj
+        ]);
+
+        $response = $this->postJson("/api/store/", [
+            "name" => $store->name,
+            "email" => $this->fakerBr->email(),
+            "password" => $store->password,
+            "cnpj" => $store->cnpj
+        ]);
+
+        $response->assertStatus(400);
+        $this->assertSame("The cnpj is already in use", $response["message"]);
+
+    }
 }

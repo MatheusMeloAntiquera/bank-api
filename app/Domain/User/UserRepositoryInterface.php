@@ -12,4 +12,6 @@ interface UserRepositoryInterface
     public function findUser(int $id): User|null;
     public function findUserByEmail(string $email): User|null;
     public function updateBalance(User $user, float $newValue): void;
+    public function findUserByCpf(string $cpf): User|null;
+
 }

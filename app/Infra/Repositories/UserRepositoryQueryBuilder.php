@@ -97,4 +97,25 @@ class UserRepositoryQueryBuilder implements UserRepositoryInterface
         ]);
     }
 
+    public function findUserByCpf(string $cpf): User|null
+    {
+        $result = DB::table($this->table)->where('cpf', $cpf)->first();
+
+        if (empty($result)) {
+            return null;
+        }
+
+        return new User(
+            $result->id,
+            $result->name,
+            $result->email,
+            $result->password,
+            $result->balance,
+            $result->cpf,
+            $result->active,
+            $result->created_at,
+            $result->updated_at
+        );
+    }
+
 }

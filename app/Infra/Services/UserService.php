@@ -22,6 +22,7 @@ final class UserService implements UserServiceInterface
     public function createNewUser(DtoUserCreate $dto): User
     {
         $this->checkIfEmailIsAlreadyInUse($dto->email);
+        $this->checkIfCpfIsAlreadyInUse($dto->cpf);
 
         return $this->userRepository->createNewUser(
             new User(
@@ -74,6 +75,18 @@ final class UserService implements UserServiceInterface
             }
 
             throw new InvalidArgumentException("The e-mail is already in use");
+        }
+    }
+
+    public function checkIfCpfIsAlreadyInUse(string $cpf, User $user = null): void
+    {
+        if ($this->userRepository->findUserByCpf($cpf) != null) {
+
+            if (!empty($user) && $user->email == $cpf) {
+                return;
+            }
+
+            throw new InvalidArgumentException("The cpf is already in use");
         }
     }
 }

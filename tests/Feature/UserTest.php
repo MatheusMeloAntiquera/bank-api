@@ -177,4 +177,31 @@ class UserTest extends TestCase
         $this->assertSame("The e-mail is already in use", $response["message"]);
 
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldNotAllowTwoUserWithSameCpf(): void
+    {
+        $user = $this->returnAUserInsertable($this->fakerBr);
+
+        $this->postJson("/api/user/", [
+            "name" => $user->name,
+            "email" => $user->email,
+            "password" => $user->password,
+            "cpf" => $user->cpf
+        ]);
+
+        $response = $this->postJson("/api/user/", [
+            "name" => $user->name,
+            "email" => $this->fakerBr->email(),
+            "password" => $user->password,
+            "cpf" => $user->cpf
+        ]);
+
+        $response->assertStatus(400);
+        $this->assertSame("The cpf is already in use", $response["message"]);
+
+    }
 }

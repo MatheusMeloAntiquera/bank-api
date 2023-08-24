@@ -76,4 +76,15 @@ class StoreRepositoryEloquent implements StoreRepositoryInterface
         $storeModel->save();
     }
 
+    public function findStoreByCnpj(string $cnpj): Store|null
+    {
+        $storeModel = StoreModel::where('cnpj', $cnpj)->first();
+        if (empty($storeModel)) {
+            return null;
+        }
+
+        return Store::newStoreByArray($storeModel->toArray());
+    }
+
+
 }
