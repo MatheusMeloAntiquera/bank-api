@@ -2,9 +2,9 @@
 
 namespace App\Domain\Transaction;
 
-use App\Domain\Transfer\DtoTransferCreate;
+use App\Domain\Transaction\DtoTransactionExecute;
 
 interface TransactionServiceInterface
 {
-    public function execute(DtoTransferCreate $dtoCreate);
+    public function execute(DtoTransactionExecute $dtoCreate);
 }

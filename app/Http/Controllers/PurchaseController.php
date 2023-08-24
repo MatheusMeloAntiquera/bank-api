@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Domain\Transfer\DtoTransferExecute;
-use App\Domain\Transfer\DtoTransferResponse;
+use App\Domain\Purchase\DtoPurchaseExecute;
+use App\Domain\Purchase\DtoPurchaseResponse;
 use App\Domain\Transaction\TransactionServiceInterface;
 
-class TransferController extends Controller
+class PurchaseController extends Controller
 {
     private TransactionServiceInterface $transactionService;
     public function __construct(TransactionServiceInterface $transactionService)
@@ -15,9 +15,10 @@ class TransferController extends Controller
         $this->transactionService = $transactionService;
     }
 
-    public function executeTransfer(Request $request){
+    public function executePurchase(Request $request)
+    {
         $transaction = $this->transactionService->execute(
-            new DtoTransferExecute(
+            new DtoPurchaseExecute(
                 $request->sender_id,
                 $request->recipient_id,
                 $request->value
@@ -25,7 +26,7 @@ class TransferController extends Controller
         );
 
         return response()->json(
-            DtoTransferResponse::toArray($transaction),
+            DtoPurchaseResponse::toArray($transaction),
             201
         );
     }

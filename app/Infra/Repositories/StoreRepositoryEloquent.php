@@ -69,4 +69,11 @@ class StoreRepositoryEloquent implements StoreRepositoryInterface
         return Store::newStoreByArray($storeModel->toArray());
     }
 
+    public function updateBalance(Store $store, float $newValue): void
+    {
+        $storeModel = StoreModel::find($store->id);
+        $storeModel->balance = $newValue;
+        $storeModel->save();
+    }
+
 }
