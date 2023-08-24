@@ -2,17 +2,18 @@
 
 namespace App\Infra\Services;
 
+use Exception;
+use App\Domain\User\User;
 use App\Domain\Store\Store;
+use App\Exceptions\TransactionException;
+use App\Domain\User\UserRepositoryInterface;
 use App\Domain\Store\StoreRepositoryInterface;
 use App\Domain\Transaction\DtoTransactionExecute;
-use App\Domain\Transaction\TransactionRepositoryInterface;
-use App\Domain\Transaction\TransactionServiceInterface;
-use App\Domain\User\User;
-use App\Domain\User\UserRepositoryInterface;
-use App\Exceptions\TransactionException;
+use App\Infra\Repositories\NotifyServiceRepository;
 use App\Exceptions\TransactionNotAuthorizedException;
+use App\Domain\Transaction\TransactionServiceInterface;
+use App\Domain\Transaction\TransactionRepositoryInterface;
 use App\Infra\Repositories\AuthorizationServiceRepository;
-use Exception;
 
 abstract class TransactionServiceBase implements TransactionServiceInterface
 {
@@ -22,16 +23,19 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
     protected StoreRepositoryInterface $storeRepository;
     protected TransactionRepositoryInterface $transactionRepository;
     protected AuthorizationServiceRepository $authorizationServiceRepository;
+    protected NotifyServiceRepository $notifyServiceRepository;
     public function __construct(
         UserRepositoryInterface $userRepository,
         StoreRepositoryInterface $storeRepository,
         TransactionRepositoryInterface $transactionRepository,
-        AuthorizationServiceRepository $authorizationServiceRepository
+        AuthorizationServiceRepository $authorizationServiceRepository,
+        NotifyServiceRepository $notifyServiceRepository
     ) {
         $this->userRepository = $userRepository;
         $this->storeRepository = $storeRepository;
         $this->transactionRepository = $transactionRepository;
         $this->authorizationServiceRepository = $authorizationServiceRepository;
+        $this->notifyServiceRepository = $notifyServiceRepository;
     }
 
     abstract protected function setSender(string|int $id): void;
@@ -58,16 +62,14 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
 
             $this->updateBalances($dtoCreate->value);
 
-
             $this->checkAuthorizationOnExternalService();
 
         } catch (Exception $e) {
             $this->rollbackTransaction();
-            throw new TransactionException($e->getMessage());
+            throw $e;
         }
 
-        //TODO: Send message to recipient user/store
-        // $this->sendMessageToRecipient();
+        $this->notifyServiceRepository->sendMessageToRecipient($this->recipient, $transaction);
 
         return $transaction;
     }
@@ -76,7 +78,7 @@ abstract class TransactionServiceBase implements TransactionServiceInterface
     {
         if ($this->authorizationServiceRepository->isAuthorized() === false) {
             throw new TransactionNotAuthorizedException(
-                "The external service not authorized this transaction"
+                "The external service did not authorized this transaction"
             );
         }
     }

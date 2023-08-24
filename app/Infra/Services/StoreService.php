@@ -22,6 +22,7 @@ final class StoreService implements StoreServiceInterface
     public function createNewStore(DtoStoreCreate $dto): Store
     {
         $this->checkIfEmailIsAlreadyInUse($dto->email);
+        $this->checkIfCnpjIsAlreadyInUse($dto->cnpj);
 
         return $this->storeRepository->createNewStore(
             new Store(
@@ -74,6 +75,18 @@ final class StoreService implements StoreServiceInterface
             }
 
             throw new InvalidArgumentException("The e-mail is already in use");
+        }
+    }
+
+    public function checkIfCnpjIsAlreadyInUse(string $cnpj, Store $store = null): void
+    {
+        if ($this->storeRepository->findStoreByCnpj($cnpj) != null) {
+
+            if (!empty($store) && $store->email == $cnpj) {
+                return;
+            }
+
+            throw new InvalidArgumentException("The cnpj is already in use");
         }
     }
 }
